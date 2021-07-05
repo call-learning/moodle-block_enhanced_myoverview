@@ -17,9 +17,9 @@
 /**
  * Version details for the My overview block.
  *
- * @package    block_myoverview
- * @copyright  Mark Nelson <markn@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     block_enhanced_myoverview
+ * @copyright   2021 Laurent David <laurent@call-learning.fr>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();

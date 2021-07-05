@@ -17,10 +17,9 @@
 /**
  * External course API
  *
- * @package    core_course
- * @category   external
- * @copyright  2009 Petr Skodak
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     block_enhanced_myoverview
+ * @copyright   2021 Laurent David <laurent@call-learning.fr>
+ * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace block_enhanced_myoverview;
@@ -45,7 +44,7 @@ require_once("$CFG->dirroot/course/externallib.php");
 /**
  * Course external functions
  *
- * @package    core_course
+ * @package     block_enhanced_myoverview
  * @category   external
  * @copyright  2011 Jerome Mouneyrac
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -119,6 +118,7 @@ class external extends external_api {
                 'additionalfilter' => $additionalfilter
             )
         );
+        self::validate_context(context_user::instance($USER->id));
 
         $classification = $params['classification'];
         $limit = $params['limit'];
@@ -146,9 +146,55 @@ class external extends external_api {
             default:
                 throw new invalid_parameter_exception('Invalid classification');
         }
+        list($filteredcourses, $processedcount) = static::filter_my_courses(
+            $classification,
+            $limit,
+            $offset,
+            $sort,
+            $customfieldname,
+            $customfieldvalue,
+            $additionalfilter);
+        $renderer = $PAGE->get_renderer('core');
+        $formattedcourses = array_map(function($course) use ($renderer, $favouritecourseids) {
+            context_helper::preload_from_record($course);
+            $context = context_course::instance($course->id);
+            $isfavourite = false;
+            if (in_array($course->id, $favouritecourseids)) {
+                $isfavourite = true;
+            }
+            $exporter = new course_summary_exporter($course, ['context' => $context, 'isfavourite' => $isfavourite]);
+            return $exporter->export($renderer);
+        }, $filteredcourses);
 
-        self::validate_context(context_user::instance($USER->id));
+        return [
+            'courses' => $formattedcourses,
+            'nextoffset' => $offset + $processedcount
+        ];
+    }
 
+    /**
+     * Filter my courses (with parameters)
+     *
+     *
+     * @param string $classification
+     * @param int $limit
+     * @param int $offset
+     * @param string|null $sort
+     * @param string|null $customfieldname
+     * @param string|null $customfieldvalue
+     * @param string|null $additionalfilter if set to 'iteach' will display only courses I am registered as a teacher.
+     * @return array
+     * @throws \coding_exception
+     * @throws \moodle_exception
+     */
+    public static function filter_my_courses(string $classification,
+        int $limit = 0,
+        int $offset = 0,
+        string $sort = null,
+        string $customfieldname = null,
+        string $customfieldvalue = null,
+        string $additionalfilter = null) {
+        global $CFG, $PAGE, $USER;
         $requiredproperties = course_summary_exporter::define_properties();
         $fields = join(',', array_keys($requiredproperties));
         $hiddencourses = get_hidden_courses_on_timeline();
@@ -180,7 +226,6 @@ class external extends external_api {
                 }, $favourites);
         }
 
-
         if ($classification == COURSE_FAVOURITES) {
             list($filteredcourses, $processedcount) = course_filter_courses_by_favourites(
                 $courses,
@@ -202,30 +247,13 @@ class external extends external_api {
             );
         }
 
-
-        if ($additionalfilter == 'iteach') {
+        if ($additionalfilter == static::COURSE_I_TEACH) {
             list($filteredcourses, $processedcount) = static::course_filter_courses_i_teach(
                 $filteredcourses,
                 $limit
             );
         }
-
-        $renderer = $PAGE->get_renderer('core');
-        $formattedcourses = array_map(function($course) use ($renderer, $favouritecourseids) {
-            context_helper::preload_from_record($course);
-            $context = context_course::instance($course->id);
-            $isfavourite = false;
-            if (in_array($course->id, $favouritecourseids)) {
-                $isfavourite = true;
-            }
-            $exporter = new course_summary_exporter($course, ['context' => $context, 'isfavourite' => $isfavourite]);
-            return $exporter->export($renderer);
-        }, $filteredcourses);
-
-        return [
-            'courses' => $formattedcourses,
-            'nextoffset' => $offset + $processedcount
-        ];
+        return [$filteredcourses, $processedcount];
     }
 
     /**
@@ -237,13 +265,21 @@ class external extends external_api {
         return core_course_external::get_enrolled_courses_by_timeline_classification_returns();
     }
 
+    /**
+     * Filter courses I teach
+     *
+     * @param array $courses
+     * @param int $limit
+     * @return array
+     * @throws \dml_exception
+     */
     protected static function course_filter_courses_i_teach(
         $courses,
         int $limit = 0
     ): array {
 
         global $USER, $DB, $CFG;
-        require_once($CFG->libdir. '/accesslib.php');
+        require_once($CFG->libdir . '/accesslib.php');
 
         $roleteacherid = $DB->get_field('role', 'id', array('archetype' => 'teacher'));
         $roleeditingteacherid = $DB->get_field('role', 'id', array('archetype' => 'editingteacher'));
@@ -275,5 +311,8 @@ class external extends external_api {
         return [$filteredcourses, $numberofcoursesprocessed];
     }
 
+    /**
+     * Static filter.
+     */
     const COURSE_I_TEACH = 'iteach';
 }

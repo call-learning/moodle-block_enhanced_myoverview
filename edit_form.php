@@ -31,7 +31,10 @@
 class block_enhanced_myoverview_edit_form extends block_edit_form {
 
     /**
-     * Extends the configuration form for block_forum_feed.
+     * Extends the configuration form for block_myoverview.
+     *
+     * @param object $mform
+     * @throws coding_exception
      */
     protected function specific_definition($mform) {
         global $DB;

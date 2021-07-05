@@ -26,7 +26,8 @@ defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 
-require_once($CFG->dirroot. '/blocks/myoverview/block_myoverview.php');
+require_once($CFG->dirroot . '/blocks/myoverview/block_myoverview.php');
+
 /**
  * My overview block class.
  *
@@ -59,10 +60,16 @@ class block_enhanced_myoverview extends block_myoverview {
         $customfieldvalue = get_user_preferences('block_myoverview_user_grouping_customfieldvalue_preference');
 
         $renderable = new \block_enhanced_myoverview\output\main($group, $sort, $view, $paging, $customfieldvalue);
-        $renderer = $this->page->get_renderer('block_enhanced_myoverview');
-
+        list($allcourses, $offset) = \block_enhanced_myoverview\external::filter_my_courses("all", 0,
+            0, null, null,
+            null, \block_enhanced_myoverview\external::COURSE_I_TEACH);
         $this->content = new stdClass();
-        $this->content->text = $renderer->render($renderable);
+        if (!empty($allcourses)) {
+            $renderer = $this->page->get_renderer('block_enhanced_myoverview');
+            $this->content->text = $renderer->render($renderable);
+        } else {
+            return null;
+        }
         $this->content->footer = '';
 
         return $this->content;
