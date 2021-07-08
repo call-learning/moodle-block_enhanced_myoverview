@@ -146,7 +146,7 @@ class external extends external_api {
             default:
                 throw new invalid_parameter_exception('Invalid classification');
         }
-        list($filteredcourses, $processedcount) = static::filter_my_courses(
+        list($filteredcourses, $processedcount, $favouritecourseids) = static::filter_my_courses(
             $classification,
             $limit,
             $offset,
@@ -253,7 +253,7 @@ class external extends external_api {
                 $limit
             );
         }
-        return [$filteredcourses, $processedcount];
+        return [$filteredcourses, $processedcount, $favouritecourseids];
     }
 
     /**
