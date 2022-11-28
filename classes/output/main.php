@@ -23,10 +23,8 @@
  */
 namespace block_enhanced_myoverview\output;
 use block_enhanced_myoverview\external;
+use coding_exception;
 use renderer_base;
-
-defined('MOODLE_INTERNAL') || die();
-
 
 /**
  * Class containing data for my overview block.
@@ -39,9 +37,9 @@ class main extends \block_myoverview\output\main {
     /**
      * Export this data so it can be used as the context for a mustache template.
      *
-     * @param \renderer_base $output
+     * @param renderer_base $output
      * @return array Context variables for the template
-     * @throws \coding_exception
+     * @throws coding_exception
      *
      */
     public function export_for_template(renderer_base $output) {

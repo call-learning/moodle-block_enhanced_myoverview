@@ -22,6 +22,9 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use block_enhanced_myoverview\external;
+use block_enhanced_myoverview\output\main;
+
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
@@ -59,10 +62,10 @@ class block_enhanced_myoverview extends block_myoverview {
         $paging = get_user_preferences('block_myoverview_user_paging_preference');
         $customfieldvalue = get_user_preferences('block_myoverview_user_grouping_customfieldvalue_preference');
 
-        $renderable = new \block_enhanced_myoverview\output\main($group, $sort, $view, $paging, $customfieldvalue);
-        list($allcourses, $offset) = \block_enhanced_myoverview\external::filter_my_courses("all", 0,
+        $renderable = new main($group, $sort, $view, $paging, $customfieldvalue);
+        list($allcourses, $offset) = external::filter_my_courses("all", 0,
             0, null, null,
-            null, \block_enhanced_myoverview\external::COURSE_I_TEACH);
+            null, external::COURSE_I_TEACH);
         $this->content = new stdClass();
         if (!empty($allcourses)) {
             $renderer = $this->page->get_renderer('block_enhanced_myoverview');

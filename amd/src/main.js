@@ -16,7 +16,7 @@
 /**
  * Javascript to initialise the myoverview block.
  *
- * @package    block_enhanced_myoverview
+ * @package
  * @copyright  2018 Bas Brands <bas@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -33,11 +33,11 @@ function(
     ViewNav
 ) {
     /**
-     * Initialise all of the modules for the overview block.
+     * Initialise all the modules for the overview block.
      *
      * @param {object} root The root element for the overview block.
      */
-    var init = function(root) {
+    const init = function(root) {
         root = $(root);
         // Initialise the course navigation elements.
         ViewNav.init(root);

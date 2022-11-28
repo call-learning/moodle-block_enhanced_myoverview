@@ -15,10 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Lang strings for the My overview block.
+ * Lang strings for the 'My overview' block.
  *
  * @package    block_enhanced_myoverview
  * @copyright   2021 Laurent David <laurent@call-learning.fr>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 $string['pluginname'] = 'Enhanced Course overview';
+$string['title'] = 'Title';
