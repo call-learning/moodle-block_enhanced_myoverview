@@ -25,7 +25,6 @@
 namespace block_enhanced_myoverview;
 
 use advanced_testcase;
-use coding_exception;
 
 /**
  * Class block_enhanced_myoverview
@@ -38,7 +37,6 @@ class enhanced_myoverview_test extends advanced_testcase {
     /**
      * Test course I teach filter
      *
-     * @throws coding_exception
      * @covers \block_enhanced_myoverview\external
      */
     public function test_get_group_messages_count() {

@@ -16,7 +16,7 @@
 /**
  * Javascript to initialise the myoverview block.
  *
- * @package
+ * @module    block_enhanced_myoverview/main
  * @copyright  2018 Bas Brands <bas@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
