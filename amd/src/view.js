@@ -16,7 +16,6 @@
 /**
  * Manage the courses view for the overview block.
  *
- * @package    block_myoverview
  * @copyright  2018 Bas Brands <bas@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -63,19 +62,17 @@ define(
          * @param {object} args The request arguments
          * @return {promise} Resolved with an array of courses
          */
-        var EnhancedRepostory = Object.assign({}, Repository);
+        let EnhancedRepostory = Object.assign({}, Repository);
         EnhancedRepostory.getEnrolledCoursesByTimeline = function(args) {
-            var request = {
+            let request = {
                 methodname: 'block_enhanced_myoverview_get_enrolled_courses_by_timeline_classification',
                 args: args
             };
 
-            var promise = Ajax.call([request])[0];
-
-            return promise;
+            return Ajax.call([request])[0];
         };
 
-        var SELECTORS = {
+        let SELECTORS = {
             COURSE_REGION: '[data-region="course-view-content"]',
             ACTION_HIDE_COURSE: '[data-action="hide-course"]',
             ACTION_SHOW_COURSE: '[data-action="show-course"]',
@@ -88,14 +85,14 @@ define(
 
         };
 
-        var TEMPLATES = {
+        let TEMPLATES = {
             COURSES_CARDS: 'block_myoverview/view-cards',
             COURSES_LIST: 'block_myoverview/view-list',
             COURSES_SUMMARY: 'block_myoverview/view-summary',
             NOCOURSES: 'core_course/no-courses'
         };
 
-        var GROUPINGS = {
+        let GROUPINGS = {
             GROUPING_ALLINCLUDINGHIDDEN: 'allincludinghidden',
             GROUPING_ALL: 'all',
             GROUPING_INPROGRESS: 'inprogress',
@@ -105,17 +102,17 @@ define(
             GROUPING_HIDDEN: 'hidden'
         };
 
-        var NUMCOURSES_PERPAGE = [12, 24, 48, 96, 0];
+        let NUMCOURSES_PERPAGE = [12, 24, 48, 96, 0];
 
-        var loadedPages = [];
+        let loadedPages = [];
 
-        var courseOffset = 0;
+        let courseOffset = 0;
 
-        var lastPage = 0;
+        let lastPage = 0;
 
-        var lastLimit = 0;
+        let lastLimit = 0;
 
-        var namespace = null;
+        let namespace = null;
 
         /**
          * Get filter values from DOM.
@@ -123,8 +120,8 @@ define(
          * @param {object} root The root element for the courses view.
          * @return {filters} Set filters.
          */
-        var getFilterValues = function(root) {
-            var courseRegion = root.find(Selectors.courseView.region);
+        let getFilterValues = function(root) {
+            let courseRegion = root.find(Selectors.courseView.region);
             return {
                 display: courseRegion.attr('data-display'),
                 grouping: courseRegion.attr('data-grouping'),
@@ -138,7 +135,7 @@ define(
 
         // We want the paged content controls below the paged content area.
         // and the controls should be ignored while data is loading.
-        var DEFAULT_PAGED_CONTENT_CONFIG = {
+        let DEFAULT_PAGED_CONTENT_CONFIG = {
             ignoreControlWhileLoading: true,
             controlPlacementBottom: true,
             persistentLimitKey: 'block_myoverview_user_paging_preference'
@@ -151,7 +148,7 @@ define(
          * @param {int} limit The number of courses to show.
          * @return {promise} Resolved with an array of courses.
          */
-        var getMyCourses = function(filters, limit) {
+        let getMyCourses = function(filters, limit) {
 
             return EnhancedRepostory.getEnrolledCoursesByTimeline({
                 offset: courseOffset,
@@ -171,7 +168,7 @@ define(
          * @param  {Number} courseId Course id number
          * @return {Object} The favourite icon container
          */
-        var getFavouriteIconContainer = function(root, courseId) {
+        let getFavouriteIconContainer = function(root, courseId) {
             return root.find(SELECTORS.FAVOURITE_ICON + '[data-course-id="' + courseId + '"]');
         };
 
@@ -182,7 +179,7 @@ define(
          * @param  {Number} index Rendered page index.
          * @return {Object} The rendered paged container.
          */
-        var getPagedContentContainer = function(root, index) {
+        let getPagedContentContainer = function(root, index) {
             return root.find('[data-region="paged-content-page"][data-page="' + index + '"]');
         };
 
@@ -192,7 +189,7 @@ define(
          * @param {Object} root The favourite icon container element.
          * @return {Number} Course id.
          */
-        var getCourseId = function(root) {
+        let getCourseId = function(root) {
             return root.attr('data-course-id');
         };
 
@@ -202,12 +199,12 @@ define(
          * @param {Object} root The favourite icon container element.
          * @param  {Number} courseId Course id number.
          */
-        var hideFavouriteIcon = function(root, courseId) {
-            var iconContainer = getFavouriteIconContainer(root, courseId);
-            var isFavouriteIcon = iconContainer.find(SELECTORS.ICON_IS_FAVOURITE);
+        let hideFavouriteIcon = function(root, courseId) {
+            let iconContainer = getFavouriteIconContainer(root, courseId);
+            let isFavouriteIcon = iconContainer.find(SELECTORS.ICON_IS_FAVOURITE);
             isFavouriteIcon.addClass('hidden');
             isFavouriteIcon.attr('aria-hidden', true);
-            var notFavourteIcon = iconContainer.find(SELECTORS.ICON_NOT_FAVOURITE);
+            let notFavourteIcon = iconContainer.find(SELECTORS.ICON_NOT_FAVOURITE);
             notFavourteIcon.removeClass('hidden');
             notFavourteIcon.attr('aria-hidden', false);
         };
@@ -218,12 +215,12 @@ define(
          * @param  {Object} root The course overview container.
          * @param  {Number} courseId Course id number.
          */
-        var showFavouriteIcon = function(root, courseId) {
-            var iconContainer = getFavouriteIconContainer(root, courseId);
-            var isFavouriteIcon = iconContainer.find(SELECTORS.ICON_IS_FAVOURITE);
+        let showFavouriteIcon = function(root, courseId) {
+            let iconContainer = getFavouriteIconContainer(root, courseId);
+            let isFavouriteIcon = iconContainer.find(SELECTORS.ICON_IS_FAVOURITE);
             isFavouriteIcon.removeClass('hidden');
             isFavouriteIcon.attr('aria-hidden', false);
-            var notFavourteIcon = iconContainer.find(SELECTORS.ICON_NOT_FAVOURITE);
+            let notFavourteIcon = iconContainer.find(SELECTORS.ICON_NOT_FAVOURITE);
             notFavourteIcon.addClass('hidden');
             notFavourteIcon.attr('aria-hidden', true);
         };
@@ -235,7 +232,7 @@ define(
          * @param {Number} courseId Course id.
          * @return {Object} The add to favourite menu item.
          */
-        var getAddFavouriteMenuItem = function(root, courseId) {
+        let getAddFavouriteMenuItem = function(root, courseId) {
             return root.find('[data-action="add-favourite"][data-course-id="' + courseId + '"]');
         };
 
@@ -246,7 +243,7 @@ define(
          * @param {Number} courseId Course id.
          * @return {Object} The remove from favourites menu item.
          */
-        var getRemoveFavouriteMenuItem = function(root, courseId) {
+        let getRemoveFavouriteMenuItem = function(root, courseId) {
             return root.find('[data-action="remove-favourite"][data-course-id="' + courseId + '"]');
         };
 
@@ -256,9 +253,9 @@ define(
          * @param  {Object} root The course overview container
          * @param  {Number} courseId Course id number
          */
-        var addToFavourites = function(root, courseId) {
-            var removeAction = getRemoveFavouriteMenuItem(root, courseId);
-            var addAction = getAddFavouriteMenuItem(root, courseId);
+        let addToFavourites = function(root, courseId) {
+            let removeAction = getRemoveFavouriteMenuItem(root, courseId);
+            let addAction = getAddFavouriteMenuItem(root, courseId);
 
             setCourseFavouriteState(courseId, true).then(function(success) {
                 if (success) {
@@ -269,7 +266,7 @@ define(
                 } else {
                     Notification.alert('Starring course failed', 'Could not change favourite state');
                 }
-                return;
+
             }).catch(Notification.exception);
         };
 
@@ -279,9 +276,9 @@ define(
          * @param  {Object} root The course overview container
          * @param  {Number} courseId Course id number
          */
-        var removeFromFavourites = function(root, courseId) {
-            var removeAction = getRemoveFavouriteMenuItem(root, courseId);
-            var addAction = getAddFavouriteMenuItem(root, courseId);
+        let removeFromFavourites = function(root, courseId) {
+            let removeAction = getRemoveFavouriteMenuItem(root, courseId);
+            let addAction = getAddFavouriteMenuItem(root, courseId);
 
             setCourseFavouriteState(courseId, false).then(function(success) {
                 if (success) {
@@ -292,7 +289,7 @@ define(
                 } else {
                     Notification.alert('Starring course failed', 'Could not change favourite state');
                 }
-                return;
+
             }).catch(Notification.exception);
         };
 
@@ -303,7 +300,7 @@ define(
          * @param {Number} courseId Course id.
          * @return {Object} The hide course menu item.
          */
-        var getHideCourseMenuItem = function(root, courseId) {
+        let getHideCourseMenuItem = function(root, courseId) {
             return root.find('[data-action="hide-course"][data-course-id="' + courseId + '"]');
         };
 
@@ -314,7 +311,7 @@ define(
          * @param {Number} courseId Course id.
          * @return {Object} The show course menu item.
          */
-        var getShowCourseMenuItem = function(root, courseId) {
+        let getShowCourseMenuItem = function(root, courseId) {
             return root.find('[data-action="show-course"][data-course-id="' + courseId + '"]');
         };
 
@@ -324,16 +321,16 @@ define(
          * @param  {Object} root The course overview container
          * @param  {Number} courseId Course id number
          */
-        var hideCourse = function(root, courseId) {
-            var hideAction = getHideCourseMenuItem(root, courseId);
-            var showAction = getShowCourseMenuItem(root, courseId);
-            var filters = getFilterValues(root);
+        let hideCourse = function(root, courseId) {
+            let hideAction = getHideCourseMenuItem(root, courseId);
+            let showAction = getShowCourseMenuItem(root, courseId);
+            let filters = getFilterValues(root);
 
             setCourseHiddenState(courseId, true);
 
             // Remove the course from this view as it is now hidden and thus not covered by this view anymore.
             // Do only if we are not in "All" view mode where really all courses are shown.
-            if (filters.grouping != GROUPINGS.GROUPING_ALLINCLUDINGHIDDEN) {
+            if (filters.grouping !== GROUPINGS.GROUPING_ALLINCLUDINGHIDDEN) {
                 hideElement(root, courseId);
             }
 
@@ -347,16 +344,16 @@ define(
          * @param  {Object} root The course overview container
          * @param  {Number} courseId Course id number
          */
-        var showCourse = function(root, courseId) {
-            var hideAction = getHideCourseMenuItem(root, courseId);
-            var showAction = getShowCourseMenuItem(root, courseId);
-            var filters = getFilterValues(root);
+        let showCourse = function(root, courseId) {
+            let hideAction = getHideCourseMenuItem(root, courseId);
+            let showAction = getShowCourseMenuItem(root, courseId);
+            let filters = getFilterValues(root);
 
             setCourseHiddenState(courseId, null);
 
             // Remove the course from this view as it is now shown again and thus not covered by this view anymore.
             // Do only if we are not in "All" view mode where really all courses are shown.
-            if (filters.grouping != GROUPINGS.GROUPING_ALLINCLUDINGHIDDEN) {
+            if (filters.grouping !== GROUPINGS.GROUPING_ALLINCLUDINGHIDDEN) {
                 hideElement(root, courseId);
             }
 
@@ -368,10 +365,10 @@ define(
          * Set the courses hidden status and push to repository
          *
          * @param  {Number} courseId Course id to favourite.
-         * @param  {Bool} status new hidden status.
+         * @param  {Boolean} status new hidden status.
          * @return {Promise} EnhancedRepostory promise.
          */
-        var setCourseHiddenState = function(courseId, status) {
+        let setCourseHiddenState = function(courseId, status) {
 
             // If the given status is not hidden, the preference has to be deleted with a null value.
             if (status === false) {
@@ -393,28 +390,28 @@ define(
          * @param {Object} root The course overview container
          * @param {Number} id The course id number
          */
-        var hideElement = function(root, id) {
-            var pagingBar = root.find('[data-region="paging-bar"]');
-            var jumpto = parseInt(pagingBar.attr('data-active-page-number'));
+        let hideElement = function(root, id) {
+            let pagingBar = root.find('[data-region="paging-bar"]');
+            let jumpto = parseInt(pagingBar.attr('data-active-page-number'));
 
             // Get a reduced dataset for the current page.
-            var courseList = loadedPages[jumpto];
-            var reducedCourse = courseList.courses.reduce(function(accumulator, current) {
-                if (id != current.id) {
+            let courseList = loadedPages[jumpto];
+            let reducedCourse = courseList.courses.reduce(function(accumulator, current) {
+                if (id !== current.id) {
                     accumulator.push(current);
                 }
                 return accumulator;
             }, []);
 
-            // Get the next page's data if loaded and pop the first element from it
-            if (loadedPages[jumpto + 1] != undefined) {
-                var newElement = loadedPages[jumpto + 1].courses.slice(0, 1);
+            // Get the next page's data if loaded and pop the first element from it.
+            if (loadedPages[jumpto + 1] !== undefined) {
+                let newElement = loadedPages[jumpto + 1].courses.slice(0, 1);
 
-                // Adjust the dataset for the reset of the pages that are loaded
+                // Adjust the dataset for the reset of the pages that are loaded.
                 loadedPages.forEach(function(courseList, index) {
                     if (index > jumpto) {
-                        var popElement = [];
-                        if (loadedPages[index + 1] != undefined) {
+                        let popElement = [];
+                        if (loadedPages[index + 1] !== undefined) {
                             popElement = loadedPages[index + 1].courses.slice(0, 1);
                         }
 
@@ -426,27 +423,27 @@ define(
                 reducedCourse = $.merge(reducedCourse, newElement);
             }
 
-            // Check if the next page is the last page and if it still has data associated to it
-            if (lastPage == jumpto + 1 && loadedPages[jumpto + 1].courses.length == 0) {
-                var pagedContentContainer = root.find('[data-region="paged-content-container"]');
+            // Check if the next page is the last page and if it still has data associated to it.
+            if (lastPage === jumpto + 1 && loadedPages[jumpto + 1].courses.length === 0) {
+                let pagedContentContainer = root.find('[data-region="paged-content-container"]');
                 PagedContentFactory.resetLastPageNumber($(pagedContentContainer).attr('id'), jumpto);
             }
 
             loadedPages[jumpto].courses = reducedCourse;
 
-            // Reduce the course offset
+            // Reduce the course offset.
             courseOffset--;
 
-            // Render the paged content for the current
-            var pagedContentPage = getPagedContentContainer(root, jumpto);
+            // Render the paged content for the current.
+            let pagedContentPage = getPagedContentContainer(root, jumpto);
             renderCourses(root, loadedPages[jumpto]).then(function(html, js) {
                 return Templates.replaceNodeContents(pagedContentPage, html, js);
             }).catch(Notification.exception);
 
-            // Delete subsequent pages in order to trigger the callback
+            // Delete subsequent pages in order to trigger the callback.
             loadedPages.forEach(function(courseList, index) {
                 if (index > jumpto) {
-                    var page = getPagedContentContainer(root, index);
+                    let page = getPagedContentContainer(root, index);
                     page.remove();
                 }
             });
@@ -456,10 +453,10 @@ define(
          * Set the courses favourite status and push to repository
          *
          * @param  {Number} courseId Course id to favourite.
-         * @param  {Bool} status new favourite status.
+         * @param  {Boolean} status new favourite status.
          * @return {Promise} EnhancedRepostory promise.
          */
-        var setCourseFavouriteState = function(courseId, status) {
+        let setCourseFavouriteState = function(courseId, status) {
 
             return EnhancedRepostory.setFavouriteCourses({
                 courses: [
@@ -469,10 +466,10 @@ define(
                     }
                 ]
             }).then(function(result) {
-                if (result.warnings.length == 0) {
+                if (result.warnings.length === 0) {
                     loadedPages.forEach(function(courseList) {
                         courseList.courses.forEach(function(course, index) {
-                            if (course.id == courseId) {
+                            if (course.id === courseId) {
                                 courseList.courses[index].isfavourite = status;
                             }
                         });
@@ -491,14 +488,14 @@ define(
          * @param {array} coursesData containing array of returned courses.
          * @return {promise} jQuery promise resolved after rendering is complete.
          */
-        var renderCourses = function(root, coursesData) {
+        let renderCourses = function(root, coursesData) {
 
-            var filters = getFilterValues(root);
+            const filters = getFilterValues(root);
 
-            var currentTemplate = '';
-            if (filters.display == 'card') {
+            let currentTemplate;
+            if (filters.display === 'card') {
                 currentTemplate = TEMPLATES.COURSES_CARDS;
-            } else if (filters.display == 'list') {
+            } else if (filters.display === 'list') {
                 currentTemplate = TEMPLATES.COURSES_LIST;
             } else {
                 currentTemplate = TEMPLATES.COURSES_SUMMARY;
@@ -506,7 +503,7 @@ define(
 
             // Whether the course category should be displayed in the course item.
             coursesData.courses = coursesData.courses.map(function(course) {
-                course.showcoursecategory = filters.displaycategories == 'on' ? true : false;
+                course.showcoursecategory = filters.displaycategories === 'on';
                 return course;
             });
 
@@ -515,7 +512,7 @@ define(
                     courses: coursesData.courses,
                 });
             } else {
-                var nocoursesimg = root.find(Selectors.courseView.region).attr('data-nocoursesimg');
+                let nocoursesimg = root.find(Selectors.courseView.region).attr('data-nocoursesimg');
                 return Templates.render(TEMPLATES.NOCOURSES, {
                     nocoursesimg: nocoursesimg
                 });
@@ -527,7 +524,7 @@ define(
          *
          * @param {Number} limit The paged limit that is passed through the event
          */
-        var setLimit = function(limit) {
+        let setLimit = function(limit) {
             this.find(Selectors.courseView.region).attr('data-paging', limit);
         };
 
@@ -538,8 +535,8 @@ define(
          * @param {object} root The root element for the courses view
          * @param {string} namespace The namespace for all the events attached
          */
-        var registerPagedEventHandlers = function(root, namespace) {
-            var event = namespace + PagedContentEvents.SET_ITEMS_PER_PAGE_LIMIT;
+        let registerPagedEventHandlers = function(root, namespace) {
+            let event = namespace + PagedContentEvents.SET_ITEMS_PER_PAGE_LIMIT;
             PubSub.subscribe(event, setLimit.bind(root));
         };
 
@@ -547,15 +544,14 @@ define(
          * Intialise the courses list and cards views on page load.
          *
          * @param {object} root The root element for the courses view.
-         * @param {object} content The content element for the courses view.
          */
-        var initializePagedContent = function(root) {
+        let initializePagedContent = function(root) {
             namespace = "block_myoverview_" + root.attr('id') + "_" + Math.random();
 
-            var pagingLimit = parseInt(root.find(Selectors.courseView.region).attr('data-paging'), 10);
-            var itemsPerPage = NUMCOURSES_PERPAGE.map(function(value) {
-                var active = false;
-                if (value == pagingLimit) {
+            let pagingLimit = parseInt(root.find(Selectors.courseView.region).attr('data-paging'), 10);
+            let itemsPerPage = NUMCOURSES_PERPAGE.map(function(value) {
+                let active = false;
+                if (value === pagingLimit) {
                     active = true;
                 }
 
@@ -566,33 +562,33 @@ define(
             });
 
             // Filter out all pagination options which are too large for the amount of courses user is enrolled in.
-            var totalCourseCount = parseInt(root.find(Selectors.courseView.region).attr('data-totalcoursecount'), 10);
+            let totalCourseCount = parseInt(root.find(Selectors.courseView.region).attr('data-totalcoursecount'), 10);
             itemsPerPage = itemsPerPage.filter(function(pagingOption) {
                 return pagingOption.value < totalCourseCount || pagingOption.value === 0;
             });
 
-            var filters = getFilterValues(root);
-            var config = $.extend({}, DEFAULT_PAGED_CONTENT_CONFIG);
+            let filters = getFilterValues(root);
+            let config = $.extend({}, DEFAULT_PAGED_CONTENT_CONFIG);
             config.eventNamespace = namespace;
 
-            var pagedContentPromise = PagedContentFactory.createWithLimit(
+            let pagedContentPromise = PagedContentFactory.createWithLimit(
                 itemsPerPage,
                 function(pagesData, actions) {
-                    var promises = [];
+                    let promises = [];
 
                     pagesData.forEach(function(pageData) {
-                        var currentPage = pageData.pageNumber;
-                        var limit = (pageData.limit > 0) ? pageData.limit : 0;
+                        let currentPage = pageData.pageNumber;
+                        let limit = (pageData.limit > 0) ? pageData.limit : 0;
 
-                        // Reset local variables if limits have changed
-                        if (lastLimit != limit) {
+                        // Reset local variables if limits have changed.
+                        if (lastLimit !== limit) {
                             loadedPages = [];
                             courseOffset = 0;
                             lastPage = 0;
                         }
 
-                        if (lastPage == currentPage) {
-                            // If we are on the last page and have it's data then load it from cache
+                        if (lastPage === currentPage) {
+                            // If we are on the last page and have it's data then load it from cache.
                             actions.allItemsLoaded(lastPage);
                             promises.push(renderCourses(root, loadedPages[currentPage]));
                             return;
@@ -601,24 +597,24 @@ define(
                         lastLimit = limit;
 
                         // Get 2 pages worth of data as we will need it for the hidden functionality.
-                        if (loadedPages[currentPage + 1] == undefined) {
-                            if (loadedPages[currentPage] == undefined) {
+                        if (loadedPages[currentPage + 1] === undefined) {
+                            if (loadedPages[currentPage] === undefined) {
                                 limit *= 2;
                             }
                         }
 
-                        var pagePromise = getMyCourses(
+                        let pagePromise = getMyCourses(
                             filters,
                             limit
                         ).then(function(coursesData) {
-                            var courses = coursesData.courses;
-                            var nextPageStart = 0;
-                            var pageCourses = [];
+                            let courses = coursesData.courses;
+                            let nextPageStart = 0;
+                            let pageCourses;
 
-                            // If current page's data is loaded make sure we max it to page limit
-                            if (loadedPages[currentPage] != undefined) {
+                            // If current page's data is loaded make sure we max it to page limit.
+                            if (loadedPages[currentPage] !== undefined) {
                                 pageCourses = loadedPages[currentPage].courses;
-                                var currentPageLength = pageCourses.length;
+                                let currentPageLength = pageCourses.length;
                                 if (currentPageLength < pageData.limit) {
                                     nextPageStart = pageData.limit - currentPageLength;
                                     pageCourses = $.merge(loadedPages[currentPage].courses, courses.slice(0, nextPageStart));
@@ -629,24 +625,24 @@ define(
                                 pageCourses = (pageData.limit > 0) ? courses.slice(0, pageData.limit) : courses;
                             }
 
-                            // Finished setting up the current page
+                            // Finished setting up the current page.
                             loadedPages[currentPage] = {
                                 courses: pageCourses
                             };
 
                             // Set up the next page (if there is more than one page).
-                            var remainingCourses = nextPageStart !== false ? courses.slice(nextPageStart, courses.length) : [];
+                            const remainingCourses = nextPageStart !== false ? courses.slice(nextPageStart, courses.length) : [];
                             if (remainingCourses.length) {
                                 loadedPages[currentPage + 1] = {
                                     courses: remainingCourses
                                 };
                             }
 
-                            // Set the last page to either the current or next page
+                            // Set the last page to either the current or next page.
                             if (loadedPages[currentPage].courses.length < pageData.limit || !remainingCourses.length) {
                                 lastPage = currentPage;
                                 actions.allItemsLoaded(currentPage);
-                            } else if (loadedPages[currentPage + 1] != undefined
+                            } else if (loadedPages[currentPage + 1] !== undefined
                                 && loadedPages[currentPage + 1].courses.length < pageData.limit) {
                                 lastPage = currentPage + 1;
                             }
@@ -675,21 +671,21 @@ define(
          *
          * @param {Object} root The myoverview block container element.
          */
-        var registerEventListeners = function(root) {
+        let registerEventListeners = function(root) {
             CustomEvents.define(root, [
                 CustomEvents.events.activate
             ]);
 
             root.on(CustomEvents.events.activate, SELECTORS.ACTION_ADD_FAVOURITE, function(e, data) {
-                var favourite = $(e.target).closest(SELECTORS.ACTION_ADD_FAVOURITE);
-                var courseId = getCourseId(favourite);
+                let favourite = $(e.target).closest(SELECTORS.ACTION_ADD_FAVOURITE);
+                let courseId = getCourseId(favourite);
                 addToFavourites(root, courseId);
                 data.originalEvent.preventDefault();
             });
 
             root.on(CustomEvents.events.activate, SELECTORS.ACTION_REMOVE_FAVOURITE, function(e, data) {
-                var favourite = $(e.target).closest(SELECTORS.ACTION_REMOVE_FAVOURITE);
-                var courseId = getCourseId(favourite);
+                let favourite = $(e.target).closest(SELECTORS.ACTION_REMOVE_FAVOURITE);
+                let courseId = getCourseId(favourite);
                 removeFromFavourites(root, courseId);
                 data.originalEvent.preventDefault();
             });
@@ -699,15 +695,15 @@ define(
             });
 
             root.on(CustomEvents.events.activate, SELECTORS.ACTION_HIDE_COURSE, function(e, data) {
-                var target = $(e.target).closest(SELECTORS.ACTION_HIDE_COURSE);
-                var courseId = getCourseId(target);
+                let target = $(e.target).closest(SELECTORS.ACTION_HIDE_COURSE);
+                let courseId = getCourseId(target);
                 hideCourse(root, courseId);
                 data.originalEvent.preventDefault();
             });
 
             root.on(CustomEvents.events.activate, SELECTORS.ACTION_SHOW_COURSE, function(e, data) {
-                var target = $(e.target).closest(SELECTORS.ACTION_SHOW_COURSE);
-                var courseId = getCourseId(target);
+                let target = $(e.target).closest(SELECTORS.ACTION_SHOW_COURSE);
+                let courseId = getCourseId(target);
                 showCourse(root, courseId);
                 data.originalEvent.preventDefault();
             });
@@ -718,7 +714,7 @@ define(
          *
          * @param {object} root The root element for the courses view.
          */
-        var init = function(root) {
+        let init = function(root) {
             root = $(root);
             loadedPages = [];
             lastPage = 0;
@@ -742,10 +738,10 @@ define(
          *
          * @param {Object} root The root element for the timeline view.
          */
-        var reset = function(root) {
+        let reset = function(root) {
             if (loadedPages.length > 0) {
                 loadedPages.forEach(function(courseList, index) {
-                    var pagedContentPage = getPagedContentContainer(root, index);
+                    let pagedContentPage = getPagedContentContainer(root, index);
                     renderCourses(root, courseList).then(function(html, js) {
                         return Templates.replaceNodeContents(pagedContentPage, html, js);
                     }).catch(Notification.exception);

@@ -37,7 +37,6 @@ class block_enhanced_myoverview_edit_form extends block_edit_form {
      * @throws coding_exception
      */
     protected function specific_definition($mform) {
-        global $DB;
         // Section header title.
         $mform->addElement('header', 'configheader', get_string('blocksettings', 'block'));
         $mform->addElement('text',

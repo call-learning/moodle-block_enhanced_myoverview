@@ -22,11 +22,9 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace block_enhanced_myoverview\output;
-defined('MOODLE_INTERNAL') || die();
 
 
 use plugin_renderer_base;
-use renderable;
 
 /**
  * myoverview block renderer

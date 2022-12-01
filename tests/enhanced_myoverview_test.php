@@ -22,8 +22,10 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace block_enhanced_myoverview;
 
-defined('MOODLE_INTERNAL') || die();
+use advanced_testcase;
+use coding_exception;
 
 /**
  * Class block_enhanced_myoverview
@@ -32,11 +34,12 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright   2021 CALL Learning <laurent@call-learning.fr>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class enhanced_myoverview extends advanced_testcase {
+class enhanced_myoverview_test extends advanced_testcase {
     /**
      * Test course I teach filter
      *
      * @throws coding_exception
+     * @covers \block_enhanced_myoverview\external
      */
     public function test_get_group_messages_count() {
         $this->resetAfterTest();
@@ -51,9 +54,9 @@ class enhanced_myoverview extends advanced_testcase {
         $generator->enrol_user($teacher1->id, $course2->id, 'teacher');
         $generator->enrol_user($teacher1->id, $course3->id, 'student');
         $this->setUser($teacher1);
-        list($allcourses, $offset) = \block_enhanced_myoverview\external::filter_my_courses("all", 0,
+        list($allcourses, $offset) = external::filter_my_courses("all", 0,
             0, null, null,
-            null, \block_enhanced_myoverview\external::COURSE_I_TEACH);
+            null, external::COURSE_I_TEACH);
 
         $this->assertCount(2, $allcourses);
         $allcoursesid = array_map(function($c) {
@@ -62,9 +65,9 @@ class enhanced_myoverview extends advanced_testcase {
         $this->assertContains($course1->id, $allcoursesid);
         $this->assertContains($course2->id, $allcoursesid);
         $this->setUser($student1);
-        list($allcourses, $offset) = \block_enhanced_myoverview\external::filter_my_courses("all", 0,
+        list($allcourses, $offset) = external::filter_my_courses("all", 0,
             0, null, null,
-            null, \block_enhanced_myoverview\external::COURSE_I_TEACH);
+            null, external::COURSE_I_TEACH);
 
         $this->assertEquals([], $allcourses);
     }

@@ -25,16 +25,20 @@
 namespace block_enhanced_myoverview;
 defined('MOODLE_INTERNAL') || die;
 
+use coding_exception;
 use context_course;
 use context_helper;
 use context_user;
 use core_course\external\course_summary_exporter;
 use core_course_external;
+use core_favourites\service_factory;
+use dml_exception;
 use external_api;
 use external_description;
 use external_function_parameters;
 use external_value;
 use invalid_parameter_exception;
+use moodle_exception;
 
 global $CFG;
 
@@ -60,14 +64,14 @@ class external extends external_api {
         return new external_function_parameters(
             array(
                 'classification' => new external_value(PARAM_ALPHA, 'future, inprogress, or past'),
-                'limit' => new external_value(PARAM_INT, 'Result set limit', VALUE_DEFAULT, 0),
-                'offset' => new external_value(PARAM_INT, 'Result set offset', VALUE_DEFAULT, 0),
                 'sort' => new external_value(PARAM_TEXT, 'Sort string', VALUE_DEFAULT, null),
                 'customfieldname' => new external_value(PARAM_ALPHANUMEXT, 'Used when classification = customfield',
                     VALUE_DEFAULT, null),
                 'customfieldvalue' => new external_value(PARAM_RAW, 'Used when classification = customfield',
                     VALUE_DEFAULT, null),
                 'additionalfilter' => new external_value(PARAM_ALPHA, 'iteach, ...'), // Further classification.
+                'limit' => new external_value(PARAM_INT, 'Result set limit', VALUE_DEFAULT, 0),
+                'offset' => new external_value(PARAM_INT, 'Result set offset', VALUE_DEFAULT, 0),
             )
         );
     }
@@ -87,23 +91,22 @@ class external extends external_api {
      * and c4 and c5 will be return.
      *
      * @param string $classification past, inprogress, or future
-     * @param int $limit Result set limit
-     * @param int $offset Offset the full course set before timeline classification is applied
      * @param string $sort SQL sort string for results
      * @param string $customfieldname
      * @param string $customfieldvalue
      * @param string $additionalfilter
+     * @param int $limit Result set limit
+     * @param int $offset Offset the full course set before timeline classification is applied
      * @return array list of courses and warnings
-     * @throws  invalid_parameter_exception
      */
     public static function get_enrolled_courses_by_timeline_classification(
         string $classification,
+        string $sort,
+        string $customfieldname,
+        string $customfieldvalue,
+        string $additionalfilter,
         int $limit = 0,
-        int $offset = 0,
-        string $sort = null,
-        string $customfieldname = null,
-        string $customfieldvalue = null,
-        string $additionalfilter = null
+        int $offset = 0
     ) {
         global $CFG, $PAGE, $USER;
         require_once($CFG->dirroot . '/course/lib.php');
@@ -126,6 +129,7 @@ class external extends external_api {
         $sort = $params['sort'];
         $customfieldvalue = $params['customfieldvalue'];
 
+        // TODO this looks like an incomplete method...
         switch ($classification) {
             case COURSE_TIMELINE_ALLINCLUDINGHIDDEN:
                 break;
@@ -184,8 +188,8 @@ class external extends external_api {
      * @param string|null $customfieldvalue
      * @param string|null $additionalfilter if set to 'iteach' will display only courses I am registered as a teacher.
      * @return array
-     * @throws \coding_exception
-     * @throws \moodle_exception
+     * @throws coding_exception
+     * @throws moodle_exception
      */
     public static function filter_my_courses(string $classification,
         int $limit = 0,
@@ -194,15 +198,14 @@ class external extends external_api {
         string $customfieldname = null,
         string $customfieldvalue = null,
         string $additionalfilter = null) {
-        global $CFG, $PAGE, $USER;
+        global $USER;
         $requiredproperties = course_summary_exporter::define_properties();
         $fields = join(',', array_keys($requiredproperties));
         $hiddencourses = get_hidden_courses_on_timeline();
-        $courses = [];
 
         // If the timeline requires really all courses, get really all courses.
         if ($classification == COURSE_TIMELINE_ALLINCLUDINGHIDDEN) {
-            $courses = course_get_enrolled_courses_for_logged_in_user(0, $offset, $sort, $fields, COURSE_DB_QUERY_LIMIT);
+            $courses = course_get_enrolled_courses_for_logged_in_user(0, $offset, $sort, $fields);
 
             // Otherwise if the timeline requires the hidden courses then restrict the result to only $hiddencourses.
         } else if ($classification == COURSE_TIMELINE_HIDDEN) {
@@ -216,7 +219,7 @@ class external extends external_api {
         }
 
         $favouritecourseids = [];
-        $ufservice = \core_favourites\service_factory::get_service_for_user_context(\context_user::instance($USER->id));
+        $ufservice = service_factory::get_service_for_user_context(\context_user::instance($USER->id));
         $favourites = $ufservice->find_favourites_by_type('core_course', 'courses');
 
         if ($favourites) {
@@ -271,7 +274,7 @@ class external extends external_api {
      * @param array $courses
      * @param int $limit
      * @return array
-     * @throws \dml_exception
+     * @throws dml_exception
      */
     protected static function course_filter_courses_i_teach(
         $courses,
