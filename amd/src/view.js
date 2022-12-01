@@ -16,6 +16,7 @@
 /**
  * Manage the courses view for the overview block.
  *
+ * @module    block_enhanced_myoverview/view
  * @copyright  2018 Bas Brands <bas@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -266,7 +267,7 @@ define(
                 } else {
                     Notification.alert('Starring course failed', 'Could not change favourite state');
                 }
-
+                return true;
             }).catch(Notification.exception);
         };
 
@@ -289,7 +290,7 @@ define(
                 } else {
                     Notification.alert('Starring course failed', 'Could not change favourite state');
                 }
-
+                return true;
             }).catch(Notification.exception);
         };
 
@@ -729,7 +730,6 @@ define(
         };
 
         /**
-
          * Reset the courses views to their original
          * state on first page load.courseOffset
          *

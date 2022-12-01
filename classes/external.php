@@ -129,26 +129,17 @@ class external extends external_api {
         $sort = $params['sort'];
         $customfieldvalue = $params['customfieldvalue'];
 
-        // TODO this looks like an incomplete method...
-        switch ($classification) {
-            case COURSE_TIMELINE_ALLINCLUDINGHIDDEN:
-                break;
-            case COURSE_TIMELINE_ALL:
-                break;
-            case COURSE_TIMELINE_PAST:
-                break;
-            case COURSE_TIMELINE_INPROGRESS:
-                break;
-            case COURSE_TIMELINE_FUTURE:
-                break;
-            case COURSE_FAVOURITES:
-                break;
-            case COURSE_TIMELINE_HIDDEN:
-                break;
-            case COURSE_CUSTOMFIELD:
-                break;
-            default:
-                throw new invalid_parameter_exception('Invalid classification');
+        if (!in_array($classification, [
+            COURSE_TIMELINE_ALLINCLUDINGHIDDEN,
+            COURSE_TIMELINE_ALL,
+            COURSE_TIMELINE_PAST,
+            COURSE_TIMELINE_INPROGRESS,
+            COURSE_TIMELINE_FUTURE,
+            COURSE_FAVOURITES,
+            COURSE_TIMELINE_HIDDEN,
+            COURSE_CUSTOMFIELD
+        ])) {
+            throw new invalid_parameter_exception('Invalid classification');
         }
         list($filteredcourses, $processedcount, $favouritecourseids) = static::filter_my_courses(
             $classification,

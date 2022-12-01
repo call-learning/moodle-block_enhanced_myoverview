@@ -23,7 +23,6 @@
  */
 namespace block_enhanced_myoverview\output;
 use block_enhanced_myoverview\external;
-use coding_exception;
 use renderer_base;
 
 /**
@@ -39,7 +38,6 @@ class main extends \block_myoverview\output\main {
      *
      * @param renderer_base $output
      * @return array Context variables for the template
-     * @throws coding_exception
      *
      */
     public function export_for_template(renderer_base $output) {
