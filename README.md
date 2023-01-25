@@ -5,6 +5,11 @@
 Block derived from the myoverview block that will just display all courses a user
 would teach, ignoring others.
 
+### Supported Moodle versions 
+
+This block supports several of the latest Moodle versions.
+
+You can safely use this block with Moodle **4.1**, **4.0**, **3.11**, **3.10**, **3.9**
 ## License ##
 
 2021 CALL Learning <laurent@call-learning.fr>
