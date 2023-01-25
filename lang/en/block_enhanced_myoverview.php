@@ -23,3 +23,5 @@
  */
 $string['pluginname'] = 'Enhanced Course overview';
 $string['title'] = 'Title';
+$string[' enhanced_myoverview:addinstance'] = 'Add a Enhanced my overview block';
+$string[' enhanced_myoverview:myaddinstance'] = 'Add a Enhanced my overview block to my moodle';
