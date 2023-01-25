@@ -21,13 +21,6 @@
  * @copyright   2021 Laurent David <laurent@call-learning.fr>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-/**
- * Form for editing block instances.
- *
- * @package     block_enhanced_myoverview
- * @copyright   2021 Laurent David <laurent@call-learning.fr>
- * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 class block_enhanced_myoverview_edit_form extends block_edit_form {
 
     /**
