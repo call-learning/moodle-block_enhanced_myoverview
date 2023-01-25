@@ -48,6 +48,15 @@ class block_enhanced_myoverview extends block_myoverview {
     }
 
     /**
+     * Allows the block to have a configuration page.
+     *
+     * @return boolean
+     */
+    public function has_config() {
+        return false;
+    }
+
+    /**
      * Returns the contents.
      *
      * @return stdClass contents of block
