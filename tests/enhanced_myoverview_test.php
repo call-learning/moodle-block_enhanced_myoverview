@@ -25,6 +25,7 @@
 namespace block_enhanced_myoverview;
 
 use advanced_testcase;
+use block_enhanced_myoverview\filter_courses;
 
 /**
  * Class block_enhanced_myoverview
@@ -37,7 +38,7 @@ class enhanced_myoverview_test extends advanced_testcase {
     /**
      * Test course I teach filter
      *
-     * @covers \block_enhanced_myoverview\external
+     * @covers \block_enhanced_myoverview\external\external
      */
     public function test_get_group_messages_count() {
         $this->resetAfterTest();
@@ -52,9 +53,9 @@ class enhanced_myoverview_test extends advanced_testcase {
         $generator->enrol_user($teacher1->id, $course2->id, 'teacher');
         $generator->enrol_user($teacher1->id, $course3->id, 'student');
         $this->setUser($teacher1);
-        list($allcourses, $offset) = external::filter_my_courses("all", 0,
+        list($allcourses, $offset) = filter_courses::filter_my_courses("all", 0,
             0, null, null,
-            null, external::COURSE_I_TEACH);
+            null, filter_courses::COURSE_I_TEACH);
 
         $this->assertCount(2, $allcourses);
         $allcoursesid = array_map(function($c) {
@@ -63,9 +64,9 @@ class enhanced_myoverview_test extends advanced_testcase {
         $this->assertContains($course1->id, $allcoursesid);
         $this->assertContains($course2->id, $allcoursesid);
         $this->setUser($student1);
-        list($allcourses, $offset) = external::filter_my_courses("all", 0,
+        list($allcourses, $offset) = filter_courses::filter_my_courses("all", 0,
             0, null, null,
-            null, external::COURSE_I_TEACH);
+            null, filter_courses::COURSE_I_TEACH);
 
         $this->assertEquals([], $allcourses);
     }

@@ -22,8 +22,8 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use block_enhanced_myoverview\external;
 use block_enhanced_myoverview\output\main;
+use block_enhanced_myoverview\filter_courses;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -72,9 +72,9 @@ class block_enhanced_myoverview extends block_myoverview {
         $customfieldvalue = get_user_preferences('block_myoverview_user_grouping_customfieldvalue_preference');
 
         $renderable = new main($group, $sort, $view, $paging, $customfieldvalue);
-        list($allcourses, $offset) = external::filter_my_courses("all", 0,
+        list($allcourses, $offset) = filter_courses::filter_my_courses("all", 0,
             0, null, null,
-            null, external::COURSE_I_TEACH);
+            null, filter_courses::COURSE_I_TEACH);
         $this->content = new stdClass();
         if (!empty($allcourses)) {
             $renderer = $this->page->get_renderer('block_enhanced_myoverview');

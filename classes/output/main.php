@@ -22,7 +22,7 @@
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace block_enhanced_myoverview\output;
-use block_enhanced_myoverview\external;
+use block_enhanced_myoverview\filter_courses;
 use renderer_base;
 
 /**
@@ -42,7 +42,7 @@ class main extends \block_myoverview\output\main {
      */
     public function export_for_template(renderer_base $output) {
         $context = parent::export_for_template($output);
-        $context['additionalfilter'] = external::COURSE_I_TEACH;
+        $context['additionalfilter'] = filter_courses::COURSE_I_TEACH;
         return $context;
     }
 }

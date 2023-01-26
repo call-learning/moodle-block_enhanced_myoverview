@@ -17,7 +17,7 @@
 /**
  * File containing the class implementing moodle's privacy API for the enhanced overview block.
  *
- * @package     block_enhanced_myoverview\privacy
+ * @package     block_enhanced_myoverview
  * @copyright   2023 Laurent David <laurent@call-learning.fr>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author      Martin CORNU-MANSUY <martin@call-learning.fr>
@@ -29,14 +29,16 @@ use core_privacy\local\metadata\null_provider;
 /**
  * Class implementing moodle's privacy API for the enhanced overview block.
  *
- * @package     block_enhanced_myoverview\privacy
+ * @package     block_enhanced_myoverview
  * @copyright   2023 Laurent David <laurent@call-learning.fr>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class provider implements null_provider {
 
     /**
-     * @inheritDoc
+     * Get the language string identifier with the component's language file to explain why this plugin stores no data.
+     *
+     * @return string The language string identifier with the component's language file to explain why this plugin stores no data
      */
     public static function get_reason(): string {
         return 'privacy:metadata';
