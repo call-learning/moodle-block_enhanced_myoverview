@@ -5,7 +5,7 @@
 Block derived from the myoverview block that will just display all courses a user
 would teach, ignoring others.
 
-### Supported Moodle versions 
+## Supported Moodle versions 
 
 This block supports several of the latest Moodle versions.
 
