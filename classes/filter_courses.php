@@ -66,7 +66,8 @@ class filter_courses {
         string $customfieldname = null,
         string $customfieldvalue = null,
         string $additionalfilter = null): array {
-        global $USER;
+        global $USER, $CFG;
+        require_once ($CFG->dirroot . "/course/lib.php");
         $requiredproperties = course_summary_exporter::define_properties();
         $fields = join(',', array_keys($requiredproperties));
         $hiddencourses = get_hidden_courses_on_timeline();
