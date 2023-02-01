@@ -25,7 +25,7 @@ define(
 [
     'jquery',
     'block_enhanced_myoverview/view',
-    'block_myoverview/view_nav'
+    'block_enhanced_myoverview/view_nav'
 ],
 function(
     $,
