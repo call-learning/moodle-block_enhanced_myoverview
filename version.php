@@ -24,10 +24,10 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2023030300;         // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2020060900;         // Requires this Moodle version.
+$plugin->version = 2023030300;         // The current plugin version (Date: YYYYMMDDXX).
+$plugin->requires = 2020060900;         // Requires this Moodle version.
 $plugin->component = 'block_enhanced_myoverview'; // Full name of the plugin (used for diagnostics).
-$plugin->maturity  = MATURITY_STABLE;
+$plugin->maturity = MATURITY_STABLE;
 $plugin->dependencies = [
     'block_myoverview' => ANY_VERSION,
 ];
