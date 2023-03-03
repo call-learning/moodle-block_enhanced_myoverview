@@ -43,9 +43,9 @@ class enhanced_myoverview_test extends advanced_testcase {
     public function test_get_group_messages_count() {
         $this->resetAfterTest();
         $generator = $this->getDataGenerator();
-        $course1  = $generator->create_course();
-        $course2  = $generator->create_course();
-        $course3  = $generator->create_course();
+        $course1 = $generator->create_course();
+        $course2 = $generator->create_course();
+        $course3 = $generator->create_course();
         $student1 = $generator->create_user();
         $teacher1 = $generator->create_user();
         $generator->enrol_user($student1->id, $course1->id, 'student');
